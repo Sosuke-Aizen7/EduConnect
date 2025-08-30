@@ -1,8 +1,14 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { setupSecurity } from "./security-config";
+import { jobScheduler } from "./scheduler";
 
 const app = express();
+
+// Apply security middleware first
+setupSecurity(app);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
@@ -67,5 +73,14 @@ app.use((req, res, next) => {
     reusePort: true,
   }, () => {
     log(`serving on port ${port}`);
+    
+    // Start scheduled jobs after server is ready
+    if (app.get("env") === "development") {
+      // In development, don't start automatic scraping to avoid excessive requests
+      console.log('Development mode: Scheduled jobs available but not auto-started');
+    } else {
+      jobScheduler.startAllJobs();
+      console.log('Production mode: All scheduled jobs started');
+    }
   });
 })();
