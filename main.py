@@ -2,14 +2,22 @@
 #!/usr/bin/env python
 import os
 import sys
-import django
-from django.core.management import execute_from_command_line
+import subprocess
 
-if __name__ == '__main__':
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_backend.config.settings')
-    sys.path.append('django_backend')
+if __name__ == "__main__":
+    # Change to django_backend directory
+    os.chdir('django_backend')
     
-    django.setup()
+    # Add the django_backend directory to Python path
+    sys.path.insert(0, os.getcwd())
     
-    # Run Django development server
-    execute_from_command_line(['manage.py', 'runserver', '0.0.0.0:5000'])
+    # Set Django settings module
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
+    
+    # Run migrations first
+    print("Running migrations...")
+    subprocess.run([sys.executable, 'manage.py', 'migrate'], check=True)
+    
+    # Start Django development server
+    print("Starting Django server...")
+    subprocess.run([sys.executable, 'manage.py', 'runserver', '0.0.0.0:8000'])
