@@ -4,6 +4,8 @@ from . import views
 
 urlpatterns = [
     path('auth/user/', views.get_user_profile, name='user-profile'),
+    path('auth/login/', views.login_user, name='login'),
+    path('auth/logout/', views.logout_user, name='logout'),
     path('saved-courses/', views.get_saved_courses, name='saved-courses'),
     path('saved-courses/', views.save_course, name='save-course'),
     path('saved-courses/<int:course_id>/', views.remove_saved_course, name='remove-saved-course'),
@@ -12,3 +14,4 @@ urlpatterns = [
     path('comparisons/', views.create_comparison, name='create-comparison'),
     path('comparisons/<int:comparison_id>/', views.delete_comparison, name='delete-comparison'),
 ]
+</urlpatterns>
